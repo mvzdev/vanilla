@@ -41,6 +41,20 @@ public class UserServiceImpl implements UserService {
     public User findUserByName(String name) throws UserNotFoundException {
         return userRepository.findByName(name)
                 .orElseThrow(() ->
-                    new UserNotFoundException("User not found"));
+                        new UserNotFoundException("User not found"));
     }
+
+    @Override
+    public void updateUserName(String oldName, String newName) throws UserNotFoundException {
+        userRepository.findByName(oldName)
+                .map(user -> {
+                    user.setName(newName);
+                    return user;
+                })
+                .map(userRepository::save)
+                .orElseThrow(() ->
+                        new UserNotFoundException("User not found"));
+    }
+
+
 }
