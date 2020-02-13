@@ -8,7 +8,7 @@ import java.util.List;
 public interface UserService {
     User findUserByName(String name) throws UserNotFoundException;
 
-    User createUser(String name) throws UserAlreadyExistException;
+    void createUser(String name) throws UserAlreadyExistException;
 
     List<User> findAllUser();
 }

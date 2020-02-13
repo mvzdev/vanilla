@@ -1,32 +1,35 @@
 package com.mvz.vanilla.backend.user;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-        Assert.notNull(userRepository, "userRepository cannot be null");
-    }
-
     @Override
-    public User createUser(String name) throws UserAlreadyExistException {
+    public void createUser(String name) throws UserAlreadyExistException {
         Optional<User> existingUser = userRepository.findByName(name);
-        // TODO: check framework that was used by Johan
+        // TODO: use Vavr library for nicer calls on option
         if (existingUser.isPresent()) {
             throw new UserAlreadyExistException("User already exists");
         }
 
         User user = new User();
         user.setName(name);
-        return userRepository.save(user);
+        user.setEntityId(UUID.randomUUID().toString());
+
+        User newUser = userRepository.save(user);
+        log.info("User created: {}", newUser.toString());
     }
 
     @Override

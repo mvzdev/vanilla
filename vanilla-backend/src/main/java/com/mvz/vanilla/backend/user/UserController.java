@@ -1,8 +1,8 @@
 package com.mvz.vanilla.backend.user;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -14,14 +14,10 @@ import java.util.List;
 @RequestMapping(
         value = "/backend/api/v1/users",
         produces = "application/json")
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-        Assert.notNull(userService, "userService cannot be null");
-    }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
@@ -53,3 +49,6 @@ public class UserController {
 
 
 }
+
+
+
