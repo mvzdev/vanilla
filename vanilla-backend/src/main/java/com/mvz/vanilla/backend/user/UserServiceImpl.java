@@ -3,6 +3,7 @@ package com.mvz.vanilla.backend.user;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,22 +17,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserByName(String name) throws UserNotFoundException {
-        return userRepository.findByName(name)
-                .orElseThrow(UserNotFoundException::new);
-    }
-
-
-    @Override
     public User createUser(String name) throws UserAlreadyExistException {
         Optional<User> existingUser = userRepository.findByName(name);
         // TODO: check framework that was used by Johan
         if (existingUser.isPresent()) {
-            throw new UserAlreadyExistException();
+            throw new UserAlreadyExistException("User already exists");
         }
 
         User user = new User();
         user.setName(name);
         return userRepository.save(user);
+    }
+
+    @Override
+    public List<User> findAllUser() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public User findUserByName(String name) throws UserNotFoundException {
+        return userRepository.findByName(name)
+                .orElseThrow(() ->
+                    new UserNotFoundException("User not found"));
     }
 }
